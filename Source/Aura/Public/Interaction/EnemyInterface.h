@@ -24,5 +24,5 @@ class AURA_API IEnemyInterface
 public:
 	virtual void HighlightActor() = 0;
 	virtual void UnHighlightActor() = 0;
-
+	//接口__通用性 例如：高亮敌人--当鼠标hover的Actor实现了该接口时并且有具体的函数实现，就可以调用高亮函数
 };
