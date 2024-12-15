@@ -4,11 +4,73 @@
 #include "Player/AuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Interaction/EnemyInterface.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
 	//对服务器上数据更新的响应
 	bReplicates = true;
+	
+}
+
+void AAuraPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	CursorTrace();
+	
+}
+
+void AAuraPlayerController::CursorTrace()
+{
+	FHitResult CursorHit; //命中结果—一个结构体，可以了解
+	//检查在光标下命中结果物体的可见性，如果是阻挡命中则返回
+	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
+	if (!CursorHit.bBlockingHit) return;
+
+	LastActor = CurrentActor;
+	CurrentActor = Cast<IEnemyInterface>(CursorHit.GetActor());//检查被hit的目标是否实现了IEnemyInterface
+	/**
+ * 射线拾取后，会出现的几种情况
+ * 1. LastActor is null   CurrentActor is null 不需要任何操作
+ * 2. LastActor is null   CurrentActor is valid 高亮CurrentActor
+ * 3. LastActor is valid   CurrentActor is null 取消高亮LastActor
+ * 4. LastActor is valid   CurrentActor is valid LastActor ！= CurrentActor 取消高亮LastActor 高亮CurrentActor
+ * 5. LastActor is valid   CurrentActor is valid LastActor == CurrentActor 不需要任何操作
+ */
+	if (LastActor == nullptr)
+	{
+		if (CurrentActor != nullptr)
+		{
+			//2
+			CurrentActor->HighlightActor();
+		}
+		else
+		{
+			//1
+		}
+	}
+	else
+	{
+		if (CurrentActor == nullptr)
+		{
+			//3
+			LastActor->UnHighlightActor();
+		}else
+		{
+			if (CurrentActor != LastActor)
+			{
+				//4
+				LastActor->UnHighlightActor();
+				CurrentActor->HighlightActor();
+			}
+			else
+			{
+				//5
+			}
+		}
+	}
+	
 	
 }
 
