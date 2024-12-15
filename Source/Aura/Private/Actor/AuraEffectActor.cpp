@@ -3,25 +3,40 @@
 
 #include "Actor/AuraEffectActor.h"
 
-// Sets default values
+#include "Components/SphereComponent.h"
+
 AAuraEffectActor::AAuraEffectActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-}
-
-// Called when the game starts or when spawned
-void AAuraEffectActor::BeginPlay()
-{
-	Super::BeginPlay();
+	PrimaryActorTick.bCanEverTick = false;
+	
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
+	SetRootComponent(Mesh);
+	
+	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
+	Sphere->SetupAttachment(GetRootComponent());
 	
 }
 
-// Called every frame
-void AAuraEffectActor::Tick(float DeltaTime)
+void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::Tick(DeltaTime);
+	//TODO:改变AttributeSet 的某些属性值
+	
+}
 
+void AAuraEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	
+}
+
+void AAuraEffectActor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//动态多播委托绑定 overlap时调用函数
+	Sphere->OnComponentBeginOverlap.AddDynamic(this,&AAuraEffectActor::OnOverlap);
+	Sphere->OnComponentEndOverlap.AddDynamic(this,&AAuraEffectActor::EndOverlap);
+	
 }
 
