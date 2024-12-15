@@ -4,6 +4,8 @@
 #include "Player/AuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Character/AuraCharacter.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Interaction/EnemyInterface.h"
 
 AAuraPlayerController::AAuraPlayerController()
@@ -100,6 +102,7 @@ void AAuraPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 	UEnhancedInputComponent* AuraInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	AuraInputComponent->BindAction(LookZoomAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::LookZoom);
 	/*AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
 	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);*/
@@ -125,5 +128,20 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 		//InputAxisVector.Y/X 根据BPIA_IMC的设置
 		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
+	}
+}
+
+void AAuraPlayerController::LookZoom(const FInputActionValue& InputActionValue)
+{
+	float Zoom = InputActionValue.Get<float>();
+	APawn* ControlledPawn = GetPawn(); //获得当前控制的玩家
+	if (!ControlledPawn) return;
+	USpringArmComponent* SpringArm = ControlledPawn->FindComponentByClass<USpringArmComponent>(); //搜索其实现的Components
+	if (SpringArm)
+	{
+		float CurrentArmLength = SpringArm->TargetArmLength;
+		// 调整相机臂长度
+		CurrentArmLength = FMath::Clamp(CurrentArmLength + Zoom * 25.0f, 500.0f, 800.0f);
+		SpringArm->TargetArmLength = CurrentArmLength;
 	}
 }

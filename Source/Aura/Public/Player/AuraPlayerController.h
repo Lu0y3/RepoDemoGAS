@@ -31,8 +31,12 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
-
+	
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> LookZoomAction;
+	
 	void Move(const FInputActionValue& InputActionValue);
+	void LookZoom(const FInputActionValue& InputActionValue);
 
 	//玩家控制器时刻都在进行的光标交互天生的
 	void CursorTrace(); //追踪光标位置
