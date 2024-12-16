@@ -42,8 +42,11 @@ class AURA_API UAuraWidgetController : public UObject
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintCallable)  //在蓝图需要时可设置WCParams
-	void SetWidgetControllerParams(FWidgetControllerParams& WCParams);
-	
+	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
+
+	virtual void BroadcastInitialValues();  //子类重写
+
+	virtual void BindCallbacksToDependencies();
 protected:
 	//从下列四个TObjectPtr中获取数据  然后传给Data即在Widget中访问他们
 	UPROPERTY(BlueprintReadOnly, Category="WidgetController")

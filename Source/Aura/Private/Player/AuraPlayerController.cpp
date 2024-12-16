@@ -84,6 +84,7 @@ void AAuraPlayerController::BeginPlay()
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	if (Subsystem)
 	{
+		//考虑多人游戏不放置断言，，即如果没有增强输入子系统则不会拥有InpuContext 即输入？
 		Subsystem->AddMappingContext(AuraContext, 0);
 	}
 	//鼠标光标设置

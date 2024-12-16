@@ -40,8 +40,8 @@ private:
 
 	//玩家控制器时刻都在进行的光标交互天生的
 	void CursorTrace(); //追踪光标位置
-	IEnemyInterface* LastActor; //上一帧拾取的接口指针
-	IEnemyInterface* CurrentActor; //这一帧拾取的接口指针
+	TObjectPtr<IEnemyInterface> LastActor; //上一帧拾取的接口指针
+	TObjectPtr<IEnemyInterface> CurrentActor; //这一帧拾取的接口指针
 	
 };
 
