@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "UI/WidgetController/AuraWidgetController.h"
-#include "OverlayAuraWidgetController.generated.h"
+#include "OverlayWidgetController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class AURA_API UOverlayAuraWidgetController : public UAuraWidgetController
+class AURA_API UOverlayWidgetController : public UAuraWidgetController
 {
 	GENERATED_BODY()
 	

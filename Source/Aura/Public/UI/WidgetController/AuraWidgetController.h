@@ -9,6 +9,7 @@
 
 class UAttributeSet;
 class UAbilitySystemComponent;
+class APlayerState;
 
 USTRUCT(BlueprintType)
 struct FWidgetControllerParams
