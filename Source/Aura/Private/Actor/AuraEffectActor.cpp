@@ -26,14 +26,8 @@ void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 {
 	//TODO:改变AttributeSet 的某些属性值
 	
-	
-}
-
-void AAuraEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
 	//暂时使用const_cast 做权宜之计  后面将其更改成GameplayEffect
-	//TODO:访问任意角色的能力系统
+	//TODO:访问任意角色的能力系统并更改它的Effect属性
 	if(IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor))
 	{
 		//从OtherActor的AbilitySystemComponent中获取UAttributeSet的子类实例 UAuraAttributeSet
@@ -44,6 +38,12 @@ void AAuraEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 
 		Destroy();
 	}
+}
+
+void AAuraEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	
 }
 
 void AAuraEffectActor::BeginPlay()
