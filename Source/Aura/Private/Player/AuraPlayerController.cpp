@@ -121,9 +121,12 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	const FRotator Rotation = GetControlRotation();
 	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
 	//Matrix矩阵  UnitAxis单位轴
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	/*const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);*/
 
+	const FVector ForwardDirection = YawRotation.RotateVector(FVector::ForwardVector);
+	const FVector RightDirection = YawRotation.RotateVector(FVector::RightVector);
+	
 	if (APawn* ControlledPawn = GetPawn<APawn>())
 	{
 		//InputAxisVector.Y/X 根据BPIA_IMC的设置
