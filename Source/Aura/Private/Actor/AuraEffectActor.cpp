@@ -4,24 +4,31 @@
 #include "Actor/AuraEffectActor.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+
+/*#include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Components/SphereComponent.h"
-#include "Interaction/EnemyInterface.h"
+#include "Interaction/EnemyInterface.h"*/
+
 
 AAuraEffectActor::AAuraEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	//TODO::在蓝图中添加一些组件
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>(FName("SceneComponent")));
 	
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
+	/*Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	SetRootComponent(Mesh);
 	
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
-	Sphere->SetupAttachment(GetRootComponent());
+	Sphere->SetupAttachment(GetRootComponent());*/
 	
 }
 
-void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+/*void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//TODO:改变AttributeSet 的某些属性值
@@ -39,21 +46,39 @@ void AAuraEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActo
 
 		Destroy();
 	}
-}
+}*/
 
-void AAuraEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+/*void AAuraEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	
-}
+}*/
 
 void AAuraEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	/*
 	//动态多播委托绑定 overlap时调用函数
 	Sphere->OnComponentBeginOverlap.AddDynamic(this,&AAuraEffectActor::OnOverlap);
 	Sphere->OnComponentEndOverlap.AddDynamic(this,&AAuraEffectActor::EndOverlap);
+	*/
+	
+}
+
+void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor,const TSubclassOf<UGameplayEffect> GameplayEffectClass) const
+{
+	//在蓝图中调用当Overlay时，用于ApplyEffect给Target
+	//UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor) 首先会返回实现了ASI的Actor的ASC，否则则返回 Actor->FindComponentByClass<UAbilitySystemComponent>()
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	if (TargetASC == nullptr) return;
+	check(GameplayEffectClass);
+	
+	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(this);
+	
+	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass,1.f, EffectContextHandle);
+	TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get()); //.Data得到封装的TSPtr.Get()得到原始指针，然后解引用
 	
 }
 
