@@ -57,4 +57,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController,AuraPlayerState,AbilitySystemComponent,AttributeSet);
 		}
 	}
+
+	//继承自父类的初始化属性的函数 --这里是应用GE来应用自身初始化
+	InitializePrimaryAttributes();
 }

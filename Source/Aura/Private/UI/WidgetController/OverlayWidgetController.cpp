@@ -22,47 +22,53 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 {
 	const UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet);
 	//该委托是个多播 但不是动态不能使用AddDynamic()  /** Register for when an attribute value changes */
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute())
-	.AddUObject(this,&UOverlayWidgetController::HealthChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxHealthAttribute())
-	.AddUObject(this,&UOverlayWidgetController::MaxHealthChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetManaAttribute())
-	.AddUObject(this,&UOverlayWidgetController::ManaChanged);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxManaAttribute())
-	.AddUObject(this,&UOverlayWidgetController::MaxManaChanged);
-	
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTagsCD.AddLambda(
-	[this](const FGameplayTagContainer& TagContainer /*接收从EffectAssetTagsCD委托那广播来的参数*/)
-	{
-		//TODO::用从AuraASC那接收到的广播的 Tags去操作
-		for (const FGameplayTag& Tag : TagContainer)
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddLambda
+	(
+	[this](const FOnAttributeChangeData& Data)
 		{
-			//获取与Tag.FName匹配的DT_Row
-			FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable,Tag);
-			//TODO::将Row广播到某个MessageWidget(FUIWidgetRow中指定的那个)上
+			OnHealthChanged.Broadcast(Data.NewValue);
 		}
-	}
+	);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxHealthAttribute()).AddLambda
+	(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxHealthChanged.Broadcast(Data.NewValue);
+		}
+	);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetManaAttribute()).AddLambda
+	(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnManaChanged.Broadcast(Data.NewValue);
+		}
+	);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxManaAttribute()).AddLambda
+	(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxManaChanged.Broadcast(Data.NewValue);
+		}
 	);
 	
-}
-
-void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
-{
-	OnHealthChanged.Broadcast(Data.NewValue);
-	//Data is 'an attribute value changes' 
-}
-
-void UOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxHealthChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
-{
-	OnManaChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxManaChanged.Broadcast(Data.NewValue);
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTagsCD.AddLambda
+	(
+		[this](const FGameplayTagContainer& TagContainer /*接收从EffectAssetTagsCD委托那广播来的参数*/)
+		{
+			//TODO::用从AuraASC那接收到的广播的 Tags去操作
+			for (const FGameplayTag& Tag : TagContainer)
+			{
+				//"A.1".MatchesTag("A") will return True, "A".MatchesTag("A.1") will return False
+				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag("Message"); //请求Tag, 若没有模糊匹配的Tag将报错
+				if(Tag.MatchesTag(MessageTag))
+				{
+					//获取与Tag.FName匹配的DT_Row
+					const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable,Tag);
+					//TODO::将Row广播到某个MessageWidget(FUIWidgetRow中指定的那个)上
+					if(Row != nullptr){MessageWidgetRowCD.Broadcast(*Row);}
+				}
+			}
+		}
+	);
+	
 }
