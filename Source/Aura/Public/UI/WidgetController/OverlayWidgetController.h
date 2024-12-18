@@ -16,7 +16,7 @@ USTRUCT(BlueprintType)
 struct FUIWidgetRow : public FTableRowBase
 {
 	GENERATED_BODY()
-
+	//用作显示文本Widget
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FGameplayTag MessageTag = FGameplayTag();
 
