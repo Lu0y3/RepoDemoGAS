@@ -63,7 +63,7 @@ public:
 
 	//仅改变CurrentAttributeValue  还有一个可以Pre改变BaseValue
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-
+	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override; 
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
 	

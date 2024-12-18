@@ -3,7 +3,9 @@
 
 #include "UI/WidgetController/OverlayWidgetController.h"
 
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AuraDebugHelper.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -28,6 +30,19 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	.AddUObject(this,&UOverlayWidgetController::ManaChanged);
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxManaAttribute())
 	.AddUObject(this,&UOverlayWidgetController::MaxManaChanged);
+	
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTagsCD.AddLambda(
+	[this](const FGameplayTagContainer& TagContainer /*接收从EffectAssetTagsCD委托那广播来的参数*/)
+	{
+		//TODO::用从AuraASC那接收到的广播的 Tags去操作
+		for (const FGameplayTag& Tag : TagContainer)
+		{
+			//获取与Tag.FName匹配的DT_Row
+			FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable,Tag);
+			//TODO::将Row广播到某个MessageWidget(FUIWidgetRow中指定的那个)上
+		}
+	}
+	);
 	
 }
 

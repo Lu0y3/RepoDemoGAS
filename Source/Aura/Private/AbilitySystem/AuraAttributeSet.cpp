@@ -33,7 +33,7 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 {
 	Super::PreAttributeChange(Attribute, NewValue);
 	//在实际改变之前已经改变CurrentValue,,最好使用Pre func只用来夹紧并不会更改属性BaseValue
-	if (Attribute == GetHealthAttribute())
+	/*if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f,GetMaxHealth());
 		AuraDebug::Print("PreHealth", NewValue);
@@ -49,12 +49,34 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 	if (Attribute == GetMaxManaAttribute())
 	{
-	}
+	}*/
 	
 }
 
+void UAuraAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
+{
+	Super::PreAttributeBaseChange(Attribute, NewValue);
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f,GetMaxHealth());
+		//AuraDebug::Print("PreBaseHealth", NewValue);
+		
+	}
+	if (Attribute == GetMaxHealthAttribute())
+	{
+	}
+	if (Attribute == GetManaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f,GetMaxMana());
+		//AuraDebug::Print("PreBaseMana", NewValue);
+	}
+	if (Attribute == GetMaxManaAttribute())
+	{
+	}
+}
+
 void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data,
-	FEffectProperties& Props) const
+                                            FEffectProperties& Props) const
 {
 	//TODO::SetEffectProperties(Props)
 	//#include "GameplayEffectExtension.h"

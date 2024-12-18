@@ -77,7 +77,7 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor,TSubclassOf<UGame
 	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
 	
-	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass,1.f, EffectContextHandle);
+	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass,ActorLevel, EffectContextHandle);
 	const FActiveGameplayEffectHandle ActiveEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get()); //.Data得到封装的TSPtr.Get()得到原始指针，然后解引用
 
 	//EffectSpecHandle.Data.Get()->Def.Get() 可以得到到Effect*然后访问GE蓝图类默认值CD

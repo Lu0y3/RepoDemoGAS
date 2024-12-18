@@ -42,8 +42,14 @@ void AAuraEnemy::UnHighlightActor()
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	check(AbilitySystemComponent);
+	
+	InitAbilityActorInfo();
+}
+
+void AAuraEnemy::InitAbilityActorInfo()
+{
 	//初始化ActorInfo
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
-	
+	//单向了解
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }

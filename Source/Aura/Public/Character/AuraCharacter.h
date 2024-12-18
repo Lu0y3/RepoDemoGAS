@@ -29,5 +29,5 @@ public:
 	virtual void OnRep_PlayerState() override;  //如果 PlayerState 的某些属性在网络中发生变化，OnRep_PlayerState 会被调用，确保客户端更新相关数据。
 
 private:
-	void InitAbilityActorInfo();
+	virtual void InitAbilityActorInfo() override;
 };

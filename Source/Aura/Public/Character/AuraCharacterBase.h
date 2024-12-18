@@ -28,23 +28,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	FName WeaponTipSocketName;
-
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	FName LeftHandSocketName;
-
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	FName RightHandSocketName;
-
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	FName TailSocketName;
-
 	//GAS
 	//在子类中构建
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
-	
+
+	 virtual void InitAbilityActorInfo();
 };
