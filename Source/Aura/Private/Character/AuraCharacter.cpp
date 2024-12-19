@@ -39,10 +39,12 @@ void AAuraCharacter::OnRep_PlayerState()
 
 void AAuraCharacter::InitAbilityActorInfo()
 {
-	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	//TODO::初始化ASC的AbilityActorInfo
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>(); //从源码库底层获取PS
 	check(AuraPlayerState);
 	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this);
 	//Character单向了解AuraASC  -- 目前是为了去绑定委托
+	//TODO::待定
 	Cast<UAuraAbilitySystemComponent>(AuraPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 	
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
@@ -59,5 +61,5 @@ void AAuraCharacter::InitAbilityActorInfo()
 	}
 
 	//继承自父类的初始化属性的函数 --这里是应用GE来应用自身初始化
-	InitializePrimaryAttributes();
+	InitializeDefaultAttributes();
 }

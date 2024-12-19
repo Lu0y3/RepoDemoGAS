@@ -35,12 +35,22 @@ protected:
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
-
-	 virtual void InitAbilityActorInfo();
-
+	
+	/*UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;*/
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+
+	
+	virtual void InitAbilityActorInfo();
 	//在需要初始化主要属性的子类中调用
-	void InitializePrimaryAttributes() const;
+	void ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& GameplayEffectClass, float Level) const;
+	virtual void InitializeDefaultAttributes() const;
+	/*void InitializePrimaryAttributes() const;
+	void InitializeSecondaryAttributes() const;*/
+
 };

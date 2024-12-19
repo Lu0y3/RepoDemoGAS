@@ -22,6 +22,7 @@ UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetCont
 void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC,
 	UAttributeSet* AS) 
 {
+	//TODO::去显示UI
 	checkf(OverlayWidgetClass, TEXT("OverlayWidgetClass uninitialized , please fill out BP_AuraHUD"));
 	checkf(OverlayWidgetControllerClass, TEXT("OverlayWidgetControllerClass uninitialized , please fill out BP_AureHUD"));
 	//获得控件

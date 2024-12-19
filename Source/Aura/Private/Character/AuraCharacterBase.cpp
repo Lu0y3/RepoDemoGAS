@@ -32,7 +32,22 @@ void AAuraCharacterBase::InitAbilityActorInfo()
 {
 }
 
-void AAuraCharacterBase::InitializePrimaryAttributes() const
+void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect>& GameplayEffectClass, float Level) const
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(GameplayEffectClass);
+	//将这个GE应用的自身
+	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass,  Level, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
+}
+
+void AAuraCharacterBase::InitializeDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultPrimaryAttributes,1.f);
+	ApplyEffectToSelf(DefaultSecondaryAttributes,1.f);
+}
+/*void AAuraCharacterBase::InitializePrimaryAttributes() const
 {
 	check(IsValid(GetAbilitySystemComponent()));
 	check(DefaultPrimaryAttributes);
@@ -41,5 +56,14 @@ void AAuraCharacterBase::InitializePrimaryAttributes() const
 	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes, 1.0f, ContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 }
+
+void AAuraCharacterBase::InitializeSecondaryAttributes() const
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(DefaultSecondaryAttributes);
+	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultSecondaryAttributes, 1.0f, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
+}*/
 
 

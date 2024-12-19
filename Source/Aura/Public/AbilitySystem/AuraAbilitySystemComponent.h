@@ -19,7 +19,7 @@ public:
 	
 	FEffectAssetTagsSignature EffectAssetTagsCD;
 protected:
-	
-	//去绑定委托FOnGameplayEffectAppliedDelegate OnGameplayEffectAppliedDelegateToSelf;
+	//TODO::当GE被应用到self(即ASC)时，调用ASC.h中的委托绑定callback去Broadcast需要的内容
+	/** Called on server whenever a GE is applied to self. This includes instant and duration based GEs. */
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle);
 };
