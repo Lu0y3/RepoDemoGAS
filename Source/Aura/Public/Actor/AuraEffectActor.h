@@ -45,7 +45,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	//TODO:: ApplyGameplayEffect!的方式 分别是直接调用应用和间接调用
+	//TODO:: ApplyEffectToTarget ! 分别是直接调用应用和间接调用
 	UFUNCTION(BlueprintCallable,Category="Applied Effects")
 	void ApplyEffectToTarget(AActor* TargetActor,TSubclassOf<UGameplayEffect> GameplayEffectClass) ;
 	

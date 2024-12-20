@@ -29,11 +29,14 @@ void AAuraPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	//TODO::进行网络复制的步骤: 3、变量Level  (#include "Net/UnrealNetwork.h")
+	//将Level属性注册到服务器，在服务器有改动时，会自动复制到本地
+	//DOREPLIFETIME_CONDITION_NOTIFY 三个是递进的
+	//Ctrl+T 搜索"ELifetimeCondition"
 	DOREPLIFETIME(AAuraPlayerState,Level);
 	
 }
 
 void AAuraPlayerState::OnRep_Level(int32 OldLevel) const
 {
-	//使用委托通知Level
+	//使用委托通知Level 
 }
