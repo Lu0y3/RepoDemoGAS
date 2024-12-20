@@ -23,6 +23,10 @@ public:
 	virtual void UnHighlightActor() override;
 	/** end Enemy Interface */
 
+	/** Combat Interface */
+	virtual int32 GetPlayerLevel() override;
+	/** end Combat Interface */
+	
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsHighlighted = false;
 	

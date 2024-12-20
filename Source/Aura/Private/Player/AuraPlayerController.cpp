@@ -137,8 +137,8 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::LookZoom(const FInputActionValue& InputActionValue)
 {
-	float Zoom = InputActionValue.Get<float>();
-	APawn* ControlledPawn = GetPawn(); //获得当前控制的玩家
+	const float Zoom = InputActionValue.Get<float>();
+	const APawn* ControlledPawn = GetPawn(); //获得当前控制的玩家
 	if (!ControlledPawn) return;
 	USpringArmComponent* SpringArm = ControlledPawn->FindComponentByClass<USpringArmComponent>(); //搜索其实现的Components
 	if (SpringArm)

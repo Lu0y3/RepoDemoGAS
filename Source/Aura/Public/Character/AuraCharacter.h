@@ -29,6 +29,10 @@ public:
 	/** PlayerState Replication Notification Callback 来自Pawn.h*/ 
 	virtual void OnRep_PlayerState() override;  //如果 PlayerState 的某些属性在网络中发生变化，OnRep_PlayerState 会被调用，确保客户端更新相关数据。
 
+	/** Combat Interface */
+	virtual int32 GetPlayerLevel() override;
+	/** end Combat Interface */
+	
 private:
 	virtual void InitAbilityActorInfo() override;
 };
