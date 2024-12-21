@@ -12,6 +12,7 @@ UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetCont
 	{
 		//若是HUD没有WC则New一个新的Object  根据蓝图分配的UClass
 		OverlayWidgetController = NewObject<UOverlayWidgetController>(this,OverlayWidgetControllerClass);
+		//TODO::让OverlayController可以访问到WCParams,,其他同理 如MenuController
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
 		//首次HUD设置WC时，进行AS的多播委托绑定,该绑定用于每当ASValue发生改变时调用对应的回调func去广播NewValue
 		OverlayWidgetController->BindCallbacksToDependencies();

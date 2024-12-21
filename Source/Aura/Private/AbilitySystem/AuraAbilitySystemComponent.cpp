@@ -4,6 +4,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 #include "AuraDebugHelper.h"
+
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
 	//（首先从CharacterInitAAInfo那里调用初始绑定）  绑定委托当GE被应用时调用EffectApplied(a,b,c)并传入三个参数

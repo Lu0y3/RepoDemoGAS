@@ -59,7 +59,7 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			for (const FGameplayTag& Tag : TagContainer)
 			{
 				//"A.1".MatchesTag("A") will return True, "A".MatchesTag("A.1") will return False
-				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag("Message"); //请求Tag, 若没有模糊匹配的Tag将报错
+				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag("Message"); //TODO::请求Tag(来自引擎), 若没有模糊匹配的Tag将报错
 				if(Tag.MatchesTag(MessageTag))
 				{
 					//获取与Tag.FName匹配的DT_Row
