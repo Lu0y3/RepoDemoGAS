@@ -34,11 +34,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidge
 /**
  * 
  */
-UCLASS(BlueprintType, Blueprintable) //eg:这个UClass可以在蓝图中用作被强制转换的类型
+UCLASS(BlueprintType, Blueprintable) //TODO::这个UClass可以在蓝图中用作被强制转换的类型,也可以去创建BP_Class
 class AURA_API UOverlayWidgetController : public UAuraWidgetController
 {
 	GENERATED_BODY()
+	//TODO::创建WidgetController 并将Widget显示在HUD上: 1、
 public:
+	
 	virtual void BroadcastInitialValues() override;
 	virtual void BindCallbacksToDependencies() override;
 	

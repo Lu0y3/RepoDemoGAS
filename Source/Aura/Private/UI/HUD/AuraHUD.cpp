@@ -4,13 +4,14 @@
 #include "UI/HUD/AuraHUD.h"
 
 #include "UI/Widget/AuraUserWidget.h"
+#include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 
 UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
 	if (OverlayWidgetController == nullptr)
 	{
-		//若是HUD没有WC则New一个新的Object  根据蓝图分配的UClass
+		//若是HUD没有WC则New一个新的Object  根据蓝图分配的UClass   Outer: 创建的对象的所有者
 		OverlayWidgetController = NewObject<UOverlayWidgetController>(this,OverlayWidgetControllerClass);
 		//TODO::让OverlayController可以访问到WCParams,,其他同理 如MenuController
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
@@ -20,10 +21,21 @@ UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetCont
 	return OverlayWidgetController;
 }
 
-void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC,
-	UAttributeSet* AS) 
+UAttributeMenuWidgetController* AAuraHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
 {
-	//TODO::去显示UI
+	if (AttributeMenuWidgetController == nullptr)
+	{
+		AttributeMenuWidgetController = NewObject<UAttributeMenuWidgetController>(this,AttributeMenuWidgetControllerClass);
+		AttributeMenuWidgetController->SetWidgetControllerParams(WCParams);
+		AttributeMenuWidgetController->BindCallbacksToDependencies();
+	}
+	return AttributeMenuWidgetController;
+}
+
+void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC,
+                           UAttributeSet* AS) 
+{
+	//TODO::创建WidgetController 并将Widget显示在HUD上: 4、
 	checkf(OverlayWidgetClass, TEXT("OverlayWidgetClass uninitialized , please fill out BP_AuraHUD"));
 	checkf(OverlayWidgetControllerClass, TEXT("OverlayWidgetControllerClass uninitialized , please fill out BP_AureHUD"));
 	//获得控件
@@ -34,8 +46,7 @@ void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	UOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
 	//设置控件的控制器 联系二者
 	OverlayWidget->SetWidgetController(WidgetController); //TODO::当调用该函数时同时触发蓝图实现WCSetEvent
-	
-	//之后调用WC的 广播初始化Values 自定义函数
+	//来自UOverlayWidgetController的自定义函数 广播初始值
 	WidgetController->BroadcastInitialValues();
 	
 	Widget->AddToViewport();

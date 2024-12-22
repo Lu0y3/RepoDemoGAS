@@ -9,9 +9,13 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class AURA_API UAttributeMenuWidgetController : public UAuraWidgetController
 {
 	GENERATED_BODY()
+public:
+	virtual void BroadcastInitialValues() override;
+	virtual void BindCallbacksToDependencies() override;
+
 	
 };

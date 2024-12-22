@@ -44,8 +44,9 @@ public:
 	UFUNCTION(BlueprintCallable)  //在蓝图需要时可设置WCParams
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 
+	//广播初始值
 	virtual void BroadcastInitialValues();  //子类重写
-
+	//表示绑定回调函数以响应外部依赖的变化
 	virtual void BindCallbacksToDependencies();
 protected:
 	//从下列四个TObjectPtr中获取数据  然后传给Data即在Widget中访问他们
