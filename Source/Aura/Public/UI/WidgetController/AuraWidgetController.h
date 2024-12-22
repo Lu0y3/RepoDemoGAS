@@ -45,6 +45,7 @@ public:
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 
 	//广播初始值
+	UFUNCTION(BlueprintCallable) //用于在蓝图中调用初始化
 	virtual void BroadcastInitialValues();  //子类重写
 	//表示绑定回调函数以响应外部依赖的变化
 	virtual void BindCallbacksToDependencies();
