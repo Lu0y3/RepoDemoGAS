@@ -18,6 +18,14 @@ public:
 	void AbilityActorInfoSet();
 	
 	FEffectAssetTagsSignature EffectAssetTagsCD;
+
+	//TODO::GameplayAbility--Grant
+	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
+
+	void AbilityInputTagHeld(const FGameplayTag& InputTag);
+	void AbilityInputTagReleased(const FGameplayTag& InputTag);
+	
+	
 protected:
 	//TODO::当GE被应用到self(即ASC)时，调用ASC.h中的委托绑定callback去Broadcast需要的内容
 	/** Called on server whenever a GE is applied to self. This includes instant and duration based GEs. */

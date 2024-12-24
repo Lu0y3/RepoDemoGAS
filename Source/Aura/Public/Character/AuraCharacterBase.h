@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "AuraCharacterBase.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
 class UAbilitySystemComponent;
@@ -54,5 +55,13 @@ protected:
 	virtual void InitializeDefaultAttributes() const;
 	/*void InitializePrimaryAttributes() const;
 	void InitializeSecondaryAttributes() const;*/
+
+	//TODO::GameplayAbility--Grant
+	void AddCharacterAbilities();
+	
+private:
+	//TODO::GameplayAbility Startup
+	UPROPERTY(EditAnywhere, Category = "Attributes")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
 };
