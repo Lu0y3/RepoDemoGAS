@@ -15,8 +15,14 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
-//TODO::制作属性TMap 1、
+//TODO::制作属性TMap 1、 使用委托 /静态T委托函数实例 /TStaticFunPtr
 //DECLARE_DELEGATE_RetVal(FGameplayAttribute,FAttributeSignature);
+
+//typedef特定于FGameplayAttribute() ，，但TStaticFunPtr通用于any Signature chosen
+//typedef TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr  FAttributeFunPtr;
+template<class T>
+using TStaticFunPtr = typename TBaseStaticDelegateInstance<T,FDefaultDelegateUserPolicy>::FFuncPtr;
+//返回的是 T(*)()
 
 USTRUCT()
 struct FEffectProperties
@@ -70,7 +76,7 @@ public:
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override; 
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
-	//TODO::制作属性TMap 2、
+	//TODO::制作属性TMap 2、 制作TMap的多种方法
 	//TMap<FGameplayTag, FAttributeSignature> TagsToAttributes;
 	//使用这个可以不用像上一个一样绑定委托直接使用
 	//TMap<FGameplayTag, TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr> TagsToAttributes;

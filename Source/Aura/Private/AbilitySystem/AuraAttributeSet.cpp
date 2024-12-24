@@ -13,7 +13,7 @@
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
-	//	//TODO::制作属性TMap 3、
+	//	//TODO::制作属性TMap 3、通过TMap将Tag与对应的static FGameplayAttribute GetAttribute()建立联系
 	const FMyGameplayTags& GameplayTags = FMyGameplayTags::Get();
 
 	/* Primary Attributes */
