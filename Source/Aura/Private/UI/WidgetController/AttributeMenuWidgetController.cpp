@@ -22,6 +22,17 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 	Infotest02.AttributeValue = AS->GetArmor();
 	AttributeInfoDelegate.Broadcast(Infotest02);
 
+	//TODO::制作属性TMap 4、
+	for (auto& Pair : AS->TagsToAttributes)
+	{
+		FAuraAttributeInfo Info = AttributeInfo->FindAttributeInfoForTag(Pair.Key);
+		//Execute()表示运行委托中绑定的逻辑，并返回结果是函数或者委托。GetNumericValue(AS)访问指定属性的当前值。
+		//Info.AttributeValue = Pair.Value.Execute().GetNumericValue(AS); //委托
+		Info.AttributeValue = Pair.Value().GetNumericValue(AS); //函数
+		AttributeInfoDelegate.Broadcast(Info);
+	}
+
+
 	
 }
 

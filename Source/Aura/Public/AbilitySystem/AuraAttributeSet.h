@@ -15,6 +15,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+//TODO::制作属性TMap 1、
+//DECLARE_DELEGATE_RetVal(FGameplayAttribute,FAttributeSignature);
 
 USTRUCT()
 struct FEffectProperties
@@ -50,6 +52,11 @@ struct FEffectProperties
 	ACharacter* TargetCharacter = nullptr;
 };
 
+//typedef特定于FGameplayAttribute() ，，但TStaticFunPtr通用于any Signature chosen
+//typedef TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr  FAttributeFunPtr;
+template<class T>
+using TStaticFunPtr = typename TBaseStaticDelegateInstance<T,FDefaultDelegateUserPolicy>::FFuncPtr;
+//返回的是 T(*)()
 /**
  * 
  */
@@ -68,6 +75,21 @@ public:
 	virtual void PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const override; 
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
+	//TODO::制作属性TMap 2、
+	//TMap<FGameplayTag, FAttributeSignature> TagsToAttributes;
+	//使用这个可以不用像上一个一样绑定委托直接使用
+	//TMap<FGameplayTag, TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr> TagsToAttributes;
+	//TMap<FGameplayTag, FAttributeFunPtr> TagsToAttributes;
+	TMap<FGameplayTag, TStaticFunPtr<FGameplayAttribute()>> TagsToAttributes;
+
+	//TMap<FGameplayTag, FGameplayAttribute(*)()> TagsToAttributes;
+	//泛型编程需要学习 --静态委托绑定的函数是全局静态函数，而非成员函数。
+	//TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr FunctionPointer;
+	
+	//FFuncPtr 是一个函数指针类型，指向返回类型为 RetValType 的函数。 FGameplayAttribute(*)()
+	/*FunctionPointer = GetIntelligenceAttribute;  可以动态将不同的函数绑定到 FunctionPointer 上。
+	FGameplayAttribute Attribute = FunctionPointer();*/
+	
 	//TODO::属性设置
 #pragma region Attributes 
 	/*
