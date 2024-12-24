@@ -52,11 +52,6 @@ struct FEffectProperties
 	ACharacter* TargetCharacter = nullptr;
 };
 
-//typedef特定于FGameplayAttribute() ，，但TStaticFunPtr通用于any Signature chosen
-//typedef TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr  FAttributeFunPtr;
-template<class T>
-using TStaticFunPtr = typename TBaseStaticDelegateInstance<T,FDefaultDelegateUserPolicy>::FFuncPtr;
-//返回的是 T(*)()
 /**
  * 
  */
@@ -98,7 +93,7 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Health,Category = "vital Attribute")
 	FGameplayAttributeData Health; //当服务器将属性复制到客户端时，将调用一个该属性的Rep通知
-	//GAMEPLAYATTRIBUTE_PROPERTY_GETTER(UAuraAttributeSet,Health);
+	//GAMEPLAY ATTRIBUTE_PROPERTY_GETTER(UAuraAttributeSet,Health);
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet,Health);  //设置这个属性访问器后，可以进行Init Get Set 操作
 	
 	/*UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_MaxHealth,Category = "vital Attribute")
