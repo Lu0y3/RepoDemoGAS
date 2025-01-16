@@ -9,7 +9,8 @@
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
 	//（首先从CharacterInitAAInfo那里调用初始绑定）  绑定委托当GE被应用时调用EffectApplied(a,b,c)并传入三个参数
-	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this,&UAuraAbilitySystemComponent::EffectApplied);
+	//一旦这个委托在服务器上广播，将在服务器调用并在客户端执行
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this,&UAuraAbilitySystemComponent::ClientEffectApplied);
 	
 }
 
@@ -63,7 +64,7 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 	}
 }
 
-void UAuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySystemComponent,
+void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent,
                                                 const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveGameplayEffectHandle)
 {
 	//TODO:: 当GE应用到自身时，可以执行的一些东西（Broadcast）  如：显示Info到HUD上
