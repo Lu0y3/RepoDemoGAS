@@ -113,7 +113,7 @@ void AAuraPlayerController::CursorTrace()
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
 
 	//鼠标左键输入
 	if (InputTag.MatchesTagExact(FMyGameplayTags::Get().InputTag_LMB))
@@ -127,7 +127,7 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Blue, *InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Blue, *InputTag.ToString());
 	if (!InputTag.MatchesTagExact(FMyGameplayTags::Get().InputTag_LMB))
 	{
 		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
@@ -139,7 +139,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 	}else
 	{
-		const APawn* ControlledPawn = Cast<APawn>(GetPawn());
+		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn) //判断是否不是点按
 		{
 			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this,ControlledPawn->GetActorLocation(),CachedDestination))
@@ -164,7 +164,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Green, *InputTag.ToString());
 	//如果按住的不是LMB ,如1 2 3之类的，则代表对应能力处于活跃状态
 	if (!InputTag.MatchesTagExact(FMyGameplayTags::Get().InputTag_LMB))
 	{
@@ -186,7 +186,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 			CachedDestination = CursorHit.ImpactPoint; //冲击点
 		}
 
-		if (APawn* ControlledPawn = Cast<APawn>(GetPawn()))
+		if (APawn* ControlledPawn = GetPawn())
 		{
 			const FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal(); //向量归一化处理
 			ControlledPawn->AddMovementInput(WorldDirection); //控制Pawn移动

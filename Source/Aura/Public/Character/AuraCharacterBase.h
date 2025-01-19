@@ -31,6 +31,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName WeaponTipSocketName;
+	//这里是获取projectile的生成位置 武器尖端
+	virtual FVector GetCombatSocketLocation() override;
+
 	//GAS
 	//在子类中构建
 	UPROPERTY()
