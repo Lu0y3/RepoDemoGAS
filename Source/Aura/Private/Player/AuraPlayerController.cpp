@@ -133,11 +133,16 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 		return;
 	}
+
+	if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
+	//释放情况：
+	/*
+	 * 1、bTargeting = true  bShiftKeyDown = false  激活--瞄准了目标LMB有效
+	 * 2、bTargeting = true  bShiftKeyDown = true   激活--瞄准了目标且按下Shift 同上
+	 * 3、bTargeting = false  bShiftKeyDown = true   激活--未瞄准但按下shift(LMB) 有效
+	 */
 	
-	if (bTargeting)
-	{
-		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
-	}else
+	if (!bTargeting && !bShiftKeyDown) //同时满足未瞄准和未按住Shift键才移动
 	{
 		const APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn) //判断是否不是点按
@@ -172,7 +177,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 	//如果按住的是LMB 并且瞄准了某个目标 同上
-	if (bTargeting)
+	if (bTargeting || bShiftKeyDown)  //如果按下左键的同时按下Shift键则直接激活不论有没有瞄准目标
 	{
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}else //未瞄准目标
@@ -222,8 +227,8 @@ void AAuraPlayerController::SetupInputComponent()
 	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent);
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
 	AuraInputComponent->BindAction(LookZoomAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::LookZoom);
-	/*AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
-	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);*/
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 	//内含委托 传InputConfig的Tag 做参数 给func函数
 	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }

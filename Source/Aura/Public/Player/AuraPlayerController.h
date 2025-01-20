@@ -35,6 +35,13 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> ShiftAction;
+	//直接发射火球术
+	void ShiftPressed(){bShiftKeyDown = true;}
+	void ShiftReleased(){bShiftKeyDown = false;}
+	bool bShiftKeyDown = false;
 	
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> LookZoomAction;
@@ -79,4 +86,5 @@ private:
 
 	void AutoRun();
 };
+
 

@@ -49,7 +49,7 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	
 }
 
-void UAuraProjectileSpell::SpawnProjectile()
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
@@ -58,9 +58,12 @@ void UAuraProjectileSpell::SpawnProjectile()
 	if (CombatInterface)
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
-		
+		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation(); //将方向量转为旋转
+		Rotation.Pitch = 0.f; //设置Pitch为0，转向的朝向将平行于地面  如果要加入重力可以调节  或者进行追踪？
+
 		FTransform SpawnTransform;
-		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetLocation(CombatInterface->GetCombatSocketLocation());
+		SpawnTransform.SetRotation(Rotation.Quaternion());
 		//TODO:: set the Projectile Rotation
 		//SpawnActorDeferred将异步创建实例，在实例创建完成时，相应的数据已经应用到了实例身上
 		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
