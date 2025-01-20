@@ -2,6 +2,8 @@
 
 
 #include "MyAssetManager.h"
+
+#include "AbilitySystemGlobals.h"
 #include "MyGameplayTags.h"
 
 UMyAssetManager& UMyAssetManager::Get()
@@ -17,5 +19,5 @@ void UMyAssetManager::StartInitialLoading()
 	
 	FMyGameplayTags::InitializeNativeGameplayTag();	//让MyGameplayTags中的Tags有效初始化
 	
-	
+	UAbilitySystemGlobals::Get().InitGlobalData();  //用于TargetData UnderMouse.h 5.4以后已自动调用
 }

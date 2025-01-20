@@ -18,6 +18,7 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	//AAuraProjectile bReplicates = true; //此类在服务器运行，然后复制到每个客户端
 	
 	/* True if this is the server or single player */
+	/*
 	const bool bIsServer = HasAuthority(&ActivationInfo);
 	if (!bIsServer) return;
 
@@ -42,8 +43,36 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 		//确保变换设置被正确应用
 		Projectile->FinishSpawning(SpawnTransform);
 	}
-	
+	*/
 
 	
 	
+}
+
+void UAuraProjectileSpell::SpawnProjectile()
+{
+	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
+	if (!bIsServer) return;
+
+	ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
+	if (CombatInterface)
+	{
+		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
+		
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(SocketLocation);
+		//TODO:: set the Projectile Rotation
+		//SpawnActorDeferred将异步创建实例，在实例创建完成时，相应的数据已经应用到了实例身上
+		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+			ProjectileClass,
+			SpawnTransform,
+			GetOwningActorFromActorInfo(),
+			Cast<APawn>(GetOwningActorFromActorInfo()),
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+		//TODO::GiveProjectile aGE to causing Damage.
+		
+		//确保变换设置被正确应用
+		Projectile->FinishSpawning(SpawnTransform);
+	}
 }
