@@ -17,7 +17,7 @@ AAuraCharacterBase::AAuraCharacterBase()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile,ECR_Overlap); //pvp  pve
-	GetMesh()->SetGenerateOverlapEvents(true);
+	GetMesh()->SetGenerateOverlapEvents(true); //生成可重叠事件
 	
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
