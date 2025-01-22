@@ -13,7 +13,7 @@
 AAuraCharacterBase::AAuraCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
-	
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile,ECR_Overlap); //pvp  pve

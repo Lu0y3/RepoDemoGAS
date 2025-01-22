@@ -3,6 +3,8 @@
 
 #include "Actor/AuraProjectile.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Aura/Aura.h"
 #include "Components/AudioComponent.h"
@@ -54,8 +56,9 @@ void AAuraProjectile::Destroyed()
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 		LoopingSoundComponent->Stop();  //将音乐停止后会自动销毁
 	}
-	Super::Destroyed(); // 调用父类的销毁逻辑
 	
+	//Destroyed()当此 Actor 在游戏过程中或在编辑器中被明确销毁时调用，而不是在关卡流式传输或游戏结束期间调用
+	Super::Destroyed(); //  调用父类的销毁逻辑
 }
 
 void AAuraProjectile::ServerDestroyProjectile_Implementation()
@@ -77,12 +80,18 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	// 播放 Sound 和 Niagara 特效
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(),FRotator::ZeroRotator);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	LoopingSoundComponent->Stop(); 
+	LoopingSoundComponent->Stop();
+	
 	
 	//如果拥有权威性，在触发重叠后，销毁它，如果没有，将bHit设置为true，代表它已经触发了重叠事件，并且已经播放了几种特效，
 	//但是没有对火球的控制权，无法自身直接销毁。 需添加销毁函数
 	if (HasAuthority())
 	{
+		//Apply GE to do
+		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+		{
+			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+		}
 		//拥有权限时销毁（服务器端）
 		Destroy(); // 服务器端控制，直接销毁
 	}else

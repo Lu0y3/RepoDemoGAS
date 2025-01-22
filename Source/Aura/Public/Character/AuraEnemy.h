@@ -8,6 +8,7 @@
 
 #include "AuraEnemy.generated.h"
 
+class UWidgetComponent;
 /**
  * 
  */
@@ -36,5 +37,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults" )
 	int32 Level = 1; //IAEnemy的级别在服务器上进行
+
+	//TODO::Health Bar Widget
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBar;  
 	
 };

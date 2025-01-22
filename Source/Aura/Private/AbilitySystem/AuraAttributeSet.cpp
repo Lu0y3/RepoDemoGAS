@@ -122,11 +122,11 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 void UAuraAttributeSet::PreAttributeBaseChange(const FGameplayAttribute& Attribute, float& NewValue) const
 {
 	Super::PreAttributeBaseChange(Attribute, NewValue);
+	
 	if (Attribute == GetHealthAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f,GetMaxHealth());
 		//AuraDebug::Print("PreBaseHealth", NewValue);
-		
 	}
 	if (Attribute == GetMaxHealthAttribute())
 	{
@@ -186,7 +186,17 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
 	//TODO::利用得到的Props做一些操作
-	
+
+	if(Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+		UE_LOG(LogTemp, Warning, TEXT("%s 的生命值发生了修改，当前生命值：%f"), *Props.TargetAvatarActor->GetName(), GetHealth());
+	}
+
+	if(Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	}
 	
 	/*---------------------------------理解Props---------------------------------*/
 	/*//#include "GameplayEffectExtension.h"

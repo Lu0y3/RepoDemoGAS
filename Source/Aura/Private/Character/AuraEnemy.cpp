@@ -6,6 +6,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Aura/Aura.h"
+#include "Components/WidgetComponent.h"
 
 AAuraEnemy::AAuraEnemy()
 {
@@ -17,7 +18,9 @@ AAuraEnemy::AAuraEnemy()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
-	
+
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar->SetupAttachment(GetRootComponent());
 }
 
 void AAuraEnemy::HighlightActor()
@@ -57,4 +60,6 @@ void AAuraEnemy::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 	//单向了解
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	//初始化enemy的属性
+	InitializeDefaultAttributes();
 }

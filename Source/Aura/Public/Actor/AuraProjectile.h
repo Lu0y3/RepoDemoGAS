@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "GameFramework/Actor.h"
 #include "AuraProjectile.generated.h"
 
@@ -22,6 +23,9 @@ public:
 	//设置为公共public  因为之后可能会用它改变projectile的参数
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
+
+	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
+	FGameplayEffectSpecHandle DamageEffectSpecHandle; //蓝图可读写，创建时需要将接口暴露出来方便设置
 	
 protected:
 	virtual void BeginPlay() override;

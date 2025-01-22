@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/Abilities/AuraProjectileSpell.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Actor/AuraProjectile.h"
 #include "Interaction/CombatInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -71,6 +73,9 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 		//TODO::GiveProjectile aGE to causing Damage.
+		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass,GetAbilityLevel(),SourceASC->MakeEffectContext());
+		Projectile->DamageEffectSpecHandle = SpecHandle;
 		
 		//确保变换设置被正确应用
 		Projectile->FinishSpawning(SpawnTransform);
