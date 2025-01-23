@@ -2,6 +2,8 @@
 
 
 #include "AbilitySystem/MyASBlueprintFunctionLibrary.h"
+
+#include "Game/AuraGameModeBase.h"
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/AuraPlayerState.h"
@@ -42,4 +44,40 @@ UAttributeMenuWidgetController* UMyASBlueprintFunctionLibrary::GetAttributeMenuW
 		}
 	}
 	return nullptr;
+}
+
+void UMyASBlueprintFunctionLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject,
+	ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
+{
+	//这里需要用到ASC去索引到AvatarActor 才能应用GE属性 
+	AActor* AvatarActor = ASC->GetAvatarActor();
+	
+	//获取到当前关卡的GameMode实例
+	const AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if(GameMode == nullptr) return;
+
+	//从实例获取到关卡角色的配置
+	UCharacterClassInfo* ClassInfo = GameMode->CharacterClassInfo;
+
+	//获取到默认的基础角色数据
+	const FCharacterClassDefaultInfo ClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
+
+	//应用基础属性
+	FGameplayEffectContextHandle PrimaryContextHandle = ASC->MakeEffectContext();
+	PrimaryContextHandle.AddSourceObject(AvatarActor);
+	const FGameplayEffectSpecHandle PrimarySpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.PrimaryAttributes, Level, PrimaryContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*PrimarySpecHandle.Data.Get());
+
+	//设置次级属性
+	FGameplayEffectContextHandle SecondaryContextHandle = ASC->MakeEffectContext();
+	SecondaryContextHandle.AddSourceObject(AvatarActor);
+	const FGameplayEffectSpecHandle SecondarySpecHandle = ASC->MakeOutgoingSpec(ClassInfo->SecondaryAttributes, Level, SecondaryContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*SecondarySpecHandle.Data.Get());
+
+	//填充血量和蓝量
+	FGameplayEffectContextHandle VitalContextHandle = ASC->MakeEffectContext();
+	VitalContextHandle.AddSourceObject(AvatarActor);
+	const FGameplayEffectSpecHandle VitalSpecHandle = ASC->MakeOutgoingSpec(ClassInfo->VitalAttributes, Level, VitalContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*VitalSpecHandle.Data.Get());
+	
 }

@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/CharacterClassInfo.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "MyASBlueprintFunctionLibrary.generated.h"
 
+class UAbilitySystemComponent;
 class UAttributeMenuWidgetController;
 class UOverlayWidgetController;
 /**
@@ -21,4 +23,10 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "MyBlueprintFunctionLibrary|WidgetController")
 	static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
+
+	//初始化角色的属性
+	UFUNCTION(BlueprintCallable, Category="MyBlueprintFunctionLibrary|CharacterClassDefaults")
+	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass,
+		float Level, UAbilitySystemComponent* ASC);
+
 };
