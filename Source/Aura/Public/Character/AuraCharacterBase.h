@@ -24,6 +24,14 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	/**End IAbilitySystemInterface*/
 	UAttributeSet* GetAttributeSet()const {return  AttributeSet;}
+
+	//--ICombatInterface
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;//HitReact
+	
+	virtual void Die() override; //Death  OnServer 服务器端 
+	UFUNCTION(NetMulticast, Reliable) //NetMulticast:在服务器执行，然后复制到每个客户端
+	virtual void MulticastHandleDeath();
+
 	
 protected:
 	virtual void BeginPlay() override;
@@ -68,5 +76,7 @@ private:
 	//TODO::GameplayAbility Startup
 	UPROPERTY(EditAnywhere, Category = "Attributes")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
-
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 };

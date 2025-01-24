@@ -3,11 +3,13 @@
 
 #include "Character/AuraEnemy.h"
 
+#include "MyGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/MyASBlueprintFunctionLibrary.h"
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "UI/Widget/AuraUserWidget.h"
 
 AAuraEnemy::AAuraEnemy()
@@ -49,11 +51,27 @@ int32 AAuraEnemy::GetPlayerLevel()
 	return Level;
 }
 
+void AAuraEnemy::Die()
+{
+	SetLifeSpan(LifeSpan); //在Enemy死亡后尸体会存在五秒 对象不再需要时会自动销毁
+	Super::Die();
+}
+
+void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	//利用监听的标签和添加标签的个数 设置受击状态和基础速度
+	bHitReacting = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+}
+
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	InitAbilityActorInfo();
+	
+	//初始化角色的技能
+	UMyASBlueprintFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 	
 	//将敌人的基类作为控制器设置给用户控件，可以在用户控件绑定对应监听
 	if(UAuraUserWidget* UserWidget = Cast<UAuraUserWidget>(HealthBar->GetUserWidgetObject()))
@@ -76,6 +94,11 @@ void AAuraEnemy::BeginPlay()
 				OnMaxHealthChanged.Broadcast(Data.NewValue);
 			}
 			);
+		//实现对受击标签的监听，在源码中，受击标签会返回监听的标签和添加标签的个数  Callback func会接收这两个参
+		AbilitySystemComponent->RegisterGameplayTagEvent(FMyGameplayTags::Get().Effects_HitReact,
+			EGameplayTagEventType::NewOrRemoved).AddUObject(this,&AAuraEnemy::HitReactTagChanged);
+		
+		
 		//初始化血量
 		OnHealthChanged.Broadcast(AS->GetHealth());
 		OnMaxHealthChanged.Broadcast(AS->GetMaxHealth());
@@ -92,6 +115,8 @@ void AAuraEnemy::InitAbilityActorInfo()
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	//通过GE初始角色的属性
 	InitializeDefaultAttributes();
+
+
 }
 
 void AAuraEnemy::InitializeDefaultAttributes() const

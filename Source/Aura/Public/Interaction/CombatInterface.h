@@ -29,4 +29,9 @@ public:
 	//蓝图可实现事件 蓝图可调用
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void UpdateFacingTarget(const FVector& Target);
+	//蓝图事件，可以让蓝图重写 C++中定义  蓝图可调用
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UAnimMontage* GetHitReactMontage(); //获取受击蒙太奇动画
+
+	virtual void Die() = 0;
 };

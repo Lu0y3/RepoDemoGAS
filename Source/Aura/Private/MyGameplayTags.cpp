@@ -131,14 +131,14 @@ void FMyGameplayTags::InitializeNativeGameplayTag()
 		FString("Input Tag Passive Ability 2")
 		);
 
-	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("Damage"),
-		FString("Damage")
-		);
-
 	/*
 	 * Damage Types
 	 */
+	
+	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("Damage"),
+	FString("Damage")
+	);
 
 	GameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Damage.Fire"),

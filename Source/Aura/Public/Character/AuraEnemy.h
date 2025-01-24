@@ -28,6 +28,8 @@ public:
 
 	/** Combat Interface */
 	virtual int32 GetPlayerLevel() override;
+
+	virtual void Die() override; //Death  OnServer 服务器端 
 	/** end Combat Interface */
 	
 	UPROPERTY(BlueprintReadOnly)
@@ -38,6 +40,16 @@ public:
 	//用于广播enemy血条
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChanged;
+
+	UPROPERTY(BlueprintReadOnly, Category="Combat")
+	bool bHitReacting = false; //当前是否处于被攻击状态
+	//TODO::HitReact
+	UPROPERTY(BlueprintReadOnly, Category="Combat")
+	float BaseWalkSpeed = 250.f; //当前角色的最大移动速度
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
+	float LifeSpan = 5.f; //设置死亡后的存在时间
+	
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 	
 protected:
 	virtual void BeginPlay() override;

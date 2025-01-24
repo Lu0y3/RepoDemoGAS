@@ -29,4 +29,8 @@ public:
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass,
 		float Level, UAbilitySystemComponent* ASC);
 
+	//初始化角色的技能
+	UFUNCTION(BlueprintCallable, Category="MyBlueprintFunctionLibrary|CharacterClassDefaults")
+	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
+	
 };

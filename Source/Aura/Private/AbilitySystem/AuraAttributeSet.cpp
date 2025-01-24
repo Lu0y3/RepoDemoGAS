@@ -10,6 +10,7 @@
 
 #include "AuraDebugHelper.h"
 #include "MyGameplayTags.h"
+#include "Interaction/CombatInterface.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -197,6 +198,38 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
+	//查看IncomingDamage修改的是否为元属性
+	if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		//获取到元属性的值备用，并将属性集上的值设置为0，等待下一次设置。
+		const float LocalIncomingDamage = GetIncomingDamage();
+		SetIncomingDamage(0.f);
+
+		if(LocalIncomingDamage > 0.f)//伤害传入的时机
+		{
+			const float NewHealth = GetHealth() - LocalIncomingDamage; //受到伤害后的新生命值
+			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth())); //设置新的生命值
+
+			const bool bFatal = NewHealth <= 0.f; //血量小于等于0时，角色将会死亡 致命的(Fatal)
+			if(bFatal)
+			{
+				//调用死亡函数
+				ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
+				if(CombatInterface)
+				{
+					CombatInterface->Die();
+				}
+			}
+			else
+			{
+				////在角色没有被击杀时，让其触发受击技能。
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FMyGameplayTags::Get().Abilities_HitReact);  //添个眼 这里原本是Effects.HitReact 对应GA一样  我是修改了
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); //根据tag标签激活技能
+			}
+		}
+	}
+
 	
 	/*---------------------------------理解Props---------------------------------*/
 	/*//#include "GameplayEffectExtension.h"

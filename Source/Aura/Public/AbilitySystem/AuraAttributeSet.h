@@ -206,7 +206,7 @@ public:
 	 */
 
 	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
-	FGameplayAttributeData IncomingDamage;
+	FGameplayAttributeData IncomingDamage; //处理传入的伤害
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
 
 	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")

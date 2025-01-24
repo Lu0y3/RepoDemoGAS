@@ -81,3 +81,21 @@ void UMyASBlueprintFunctionLibrary::InitializeDefaultAttributes(const UObject* W
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalSpecHandle.Data.Get());
 	
 }
+
+void UMyASBlueprintFunctionLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+{
+	//获取到当前关卡的GameMode实例
+	const AAuraGameModeBase* GameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if(GameMode == nullptr) return;
+
+	//从实例获取到关卡角色的配置
+	UCharacterClassInfo* CharacterClassInfo = GameMode->CharacterClassInfo;
+
+	//遍历角色拥有的技能数组
+	for(const TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1); //创建技能实例
+		ASC->GiveAbility(AbilitySpec); //只应用不激活
+	}
+}
+

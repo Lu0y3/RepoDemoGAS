@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "MyGameplayTags.h"
 #include "Actor/AuraProjectile.h"
 #include "Interaction/CombatInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -75,6 +76,13 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		//TODO::GiveProjectile aGE to causing Damage.
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass,GetAbilityLevel(),SourceASC->MakeEffectContext());
+		
+		const FMyGameplayTags GameplayTags = FMyGameplayTags::Get(); //获取标签单例
+		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel()); //根据Level获取CT对应的值
+		GEngine->AddOnScreenDebugMessage(-1,2.5f,FColor::Red,FString::Printf(TEXT("FireBolt Damage: %f"), ScaledDamage));
+		//UAbilitySystemBlueprintLibrary::AssignSetByCallerMagnitude() //使用DataName设置
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, ScaledDamage);
+		
 		Projectile->DamageEffectSpecHandle = SpecHandle;
 		
 		//确保变换设置被正确应用
