@@ -31,9 +31,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
 	
-	// 声明一个 Server RPC，用于在服务器上销毁对象
+	/*// 声明一个 Server RPC，用于在服务器上销毁对象
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerDestroyProjectile();
+	void ServerDestroyProjectile();*/
 
 	//TODO:: Projectile Overlap
 	UFUNCTION()

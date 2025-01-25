@@ -7,10 +7,11 @@
 #include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 #include "GameFramework/Character.h"
-
+#include "Player/AuraPlayerController.h"
 #include "AuraDebugHelper.h"
 #include "MyGameplayTags.h"
 #include "Interaction/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -180,6 +181,20 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 	}
 }
 
+// 服务器调用客户端函数的实现
+void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, const float Damage)
+{
+	//调用显示伤害数字
+	if(Props.SourceCharacter != Props.TargetCharacter)
+	{
+		if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		{
+			//调用客户端RPC函数
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter); //调用显示伤害数字
+		}
+	}
+}
+
 void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -227,6 +242,9 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 				TagContainer.AddTag(FMyGameplayTags::Get().Abilities_HitReact);  //添个眼 这里原本是Effects.HitReact 对应GA一样  我是修改了
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); //根据tag标签激活技能
 			}
+			
+			//TODO::设置显示float伤害值的区域
+			ShowFloatingText(Props, LocalIncomingDamage);// 请求客户端执行
 		}
 	}
 

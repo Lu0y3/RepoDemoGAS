@@ -79,7 +79,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		
 		const FMyGameplayTags GameplayTags = FMyGameplayTags::Get(); //获取标签单例
 		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel()); //根据Level获取CT对应的值
-		GEngine->AddOnScreenDebugMessage(-1,2.5f,FColor::Red,FString::Printf(TEXT("FireBolt Damage: %f"), ScaledDamage));
+		//GEngine->AddOnScreenDebugMessage(-1,2.5f,FColor::Red,FString::Printf(TEXT("FireBolt Damage: %f"), ScaledDamage));
 		//UAbilitySystemBlueprintLibrary::AssignSetByCallerMagnitude() //使用DataName设置
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, ScaledDamage);
 		

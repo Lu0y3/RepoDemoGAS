@@ -283,10 +283,9 @@ public:
 #pragma endregion 
 	
 protected:
-	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
 	
+	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
+	//用于服务器端调用客户端RPC函数，在客户端执行
+	static void ShowFloatingText(const FEffectProperties& Props, const float Damage);
+
 };
-
-
-
-

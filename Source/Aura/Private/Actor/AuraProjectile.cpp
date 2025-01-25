@@ -61,7 +61,7 @@ void AAuraProjectile::Destroyed()
 	Super::Destroyed(); //  调用父类的销毁逻辑
 }
 
-void AAuraProjectile::ServerDestroyProjectile_Implementation()
+/*void AAuraProjectile::ServerDestroyProjectile_Implementation()
 {
 	// 确保在服务器上销毁
 	Destroy();
@@ -71,7 +71,7 @@ bool AAuraProjectile::ServerDestroyProjectile_Validate()
 {
 	// 可以在这里添加验证逻辑，检查销毁请求是否合理
 	return true;
-}
+}*/
 
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -99,7 +99,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		//无权威时销毁（客户端）
 		bHit = true;  // 客户端设置 bHit 为 true，等待服务器处理
 		
-		ServerDestroyProjectile();// 客户端请求服务器
+		//ServerDestroyProjectile();// 客户端请求服务器
 	}
 	
 }
