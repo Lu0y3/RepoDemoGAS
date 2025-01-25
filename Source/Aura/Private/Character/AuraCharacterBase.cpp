@@ -57,6 +57,8 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 
 	//关闭角色碰撞体碰撞通道，避免其对武器和角色模拟物理效果产生影响
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//设置角色溶解
+	Dissolve();
 }
 
 void AAuraCharacterBase::BeginPlay()
@@ -103,6 +105,40 @@ void AAuraCharacterBase::AddCharacterAbilities()
 	AuraASC->AddCharacterAbilities(StartupAbilities);
 	
 }
+
+void AAuraCharacterBase::Dissolve()
+{
+	TArray<UMaterialInstanceDynamic*> DynMatArray; //不确定材质的数量所以我们使用数组去存储遍历
+	//设置角色溶解
+	if (GetMesh() && DissolveMaterialInstance)
+	{
+		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+		GetMesh()->SetMaterial(0, DynamicMatInst);
+		DynMatArray.Add(DynamicMatInst);
+	}
+	//设置武器溶解
+	if (Weapon && WeaponDissolveMaterialInstance)
+	{
+		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
+		Weapon->SetMaterial(0, DynamicMatInst);
+		DynMatArray.Add(DynamicMatInst);
+	}
+	//调用时间轴渐变溶解
+	StartDissolveTimeline(DynMatArray);
+	
+	/* 添加这些会崩溃  // 清理数组中的动态材质实例  
+	for (UMaterialInstanceDynamic* MatInst : DynMatArray)
+	{
+		if (MatInst)
+		{
+			MatInst->ConditionalBeginDestroy(); // 异步销毁对象
+		}
+	}
+
+	DynMatArray.Empty();  // 清空数组，确保没有指向已销毁对象的引用*/ 
+	
+}
+
 
 /*void AAuraCharacterBase::InitializePrimaryAttributes() const
 {

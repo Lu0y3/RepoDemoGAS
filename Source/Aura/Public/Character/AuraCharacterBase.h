@@ -32,7 +32,6 @@ public:
 	UFUNCTION(NetMulticast, Reliable) //NetMulticast:在服务器执行，然后复制到每个客户端
 	virtual void MulticastHandleDeath();
 
-	
 protected:
 	virtual void BeginPlay() override;
 	
@@ -71,6 +70,20 @@ protected:
 
 	//TODO::GameplayAbility--Grant
 	void AddCharacterAbilities();
+
+	//--Dissolve Effect 实现思路:是将avatar和weapon的材质叫换成下面的
+	void Dissolve();
+	//蓝图可实现事件
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeline(const TArray<UMaterialInstanceDynamic*>& DynamicMaterialInstance);
+	
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+
+	//
 	
 private:
 	//TODO::GameplayAbility Startup
