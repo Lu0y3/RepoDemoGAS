@@ -32,5 +32,9 @@ public:
 	//初始化角色的技能
 	UFUNCTION(BlueprintCallable, Category="MyBlueprintFunctionLibrary|CharacterClassDefaults")
 	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
-	
+
+	//获取角色配置数据
+	UFUNCTION(BlueprintCallable, Category="MyBlueprintFunctionLibrary|CharacterClassDefaults")
+	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
+
 };
